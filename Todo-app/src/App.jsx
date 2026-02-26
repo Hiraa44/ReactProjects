@@ -24,9 +24,18 @@ function App() {
     setTodo(todo.filter(todo => todo.id !== id)); //for filtering Todo
     console.log("Todo deleted:", todo.id); 
   }
-  function EditTodo(ture){
-
+  function EditTodo(id){
+    setEditFlag(true);
+    console.log("this is current id", todo.id)
+   console.log("Edit Todo", EditFlag);
+   
+   
   }
+  function SaveTodo(){
+    setEditFlag(false);
+    alert("The Todo has been Edited Successfully")
+  }
+  
   return (
     <>
      <h1><b>Todo Application...!!!</b></h1>
@@ -38,27 +47,43 @@ function App() {
      <button onClick ={()=>showInput()}>Add Todo</button>
     
      
-    <ul>{todo.length>0 &&
-        
-         todo.map(todo => (
+    <ul>
+  {todo.length > 0 &&
+    todo.map(todo => (
 
-         <li key={todo.id} >
-          {todo.name}
-          {EditFlag ?  
-          <input
-     type="text"
-     value ={newInput}
-     placeholder = "Edit Todo" onChange={(event)=>setNewInput(event.target.value)}
-     ></input> : null}
-    <div class="actions">
-    <button onClick={()=>DeleteTodo(todo.id)}>Delete</button>
-    <button onClick={()=>setEditFlag(true)}>Edit Todo</button>
-    </div>
-    
+      <li key={todo.id}>
 
-       </li>
- ))}
-      </ul>
+        {todo.name}
+
+        {EditFlag && (
+          <>
+            <input
+              type="text"
+              value={newInput}
+              onChange={(e) => setNewInput(e.target.value)}
+            />
+
+            <button type="submit" onClick={()=>SaveTodo()}>Save</button>
+          </>
+        )}
+
+        <div className="actions">
+
+          <button onClick={() => DeleteTodo(todo.id)}>
+            Delete
+          </button>
+
+          <button onClick={() => EditTodo(todo.id)}>
+            Edit Todo
+          </button>
+
+        </div>
+
+      </li>
+
+    ))
+  }
+</ul>
     </>
   )
 }
