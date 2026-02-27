@@ -8,7 +8,8 @@ function App() {
   const [todo, setTodo]  = useState([]);
   const [newInput, setNewInput] = useState("");
   const [EditFlag, setEditFlag] = useState(false);
-
+  const [editId, setEditId] = useState(0);
+ 
   function showInput(){
     if (!input.trim()) return; 
    const newTask ={
@@ -16,7 +17,9 @@ function App() {
     name : input 
    }
    console.log(Date.now());
-    setTodo([...todo, newTask]);   //setting Todo task list
+   console.log(todo);
+    setTodo([...todo, newTask]);  
+    setNewInput(input); //setting Todo task list
     setInput("");  //setting input as empty
 }
   function DeleteTodo(id){
@@ -24,16 +27,24 @@ function App() {
     setTodo(todo.filter(todo => todo.id !== id)); //for filtering Todo
     console.log("Todo deleted:", todo.id); 
   }
-  function EditTodo(id){
-    setEditFlag(true);
-    console.log("this is current id", todo.id)
-   console.log("Edit Todo", EditFlag);
-   
-   
-  }
-  function SaveTodo(){
-    setEditFlag(false);
-    alert("The Todo has been Edited Successfully")
+ 
+  function EditTodo(item){
+    setEditId(item.id);
+    setNewInput(item.name);
+   // update the state          // hide edit input
+     
+  
+}
+  function SaveTodo(item){
+    const updatedTodos = todo.map((item) =>
+    item.id === editId ? { ...item, name: newInput } : item
+    );
+     setTodo(updatedTodos);  
+     console.log(editId)   ;
+     console.log(item.name) ;
+  setEditId(null);
+  setNewInput("");
+  alert("The Todo has been Edited Successfully");
   }
   
   return (
@@ -49,13 +60,9 @@ function App() {
      
     <ul>
   {todo.length > 0 &&
-    todo.map(todo => (
-
-      <li key={todo.id}>
-
-        {todo.name}
-
-        {EditFlag && (
+    todo.map((item) => (
+      <li key={item.id}>
+            {editId ===item.id ? (
           <>
             <input
               type="text"
@@ -63,17 +70,17 @@ function App() {
               onChange={(e) => setNewInput(e.target.value)}
             />
 
-            <button type="submit" onClick={()=>SaveTodo()}>Save</button>
+            <button type="submit" onClick={()=>SaveTodo(item)}>Save</button>
           </>
-        )}
+        ): ( <p>{item.name}</p> )}
 
         <div className="actions">
 
-          <button onClick={() => DeleteTodo(todo.id)}>
+          <button onClick={() => DeleteTodo(item.id)}>
             Delete
           </button>
 
-          <button onClick={() => EditTodo(todo.id)}>
+          <button onClick={() => EditTodo(item)}>
             Edit Todo
           </button>
 
